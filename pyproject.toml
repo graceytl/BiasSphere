@@ -19,7 +19,11 @@ dependencies = [
 dev = [
     "ipykernel>=7.1.0",
     "ipython>=9.7.0",
+    "langchain-openai>=0.3.35",
+    "langchain-valyu>=0.3.4",
+    "langgraph>=1.0.1",
     "pre-commit>=4.4.0",
+    "python-dotenv>=1.2.1",
     "ruff>=0.14.5",
 ]
 
