@@ -3,6 +3,12 @@ name = "BiasSphere"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
+authors = [
+    {name = "Hadidi, Hana", email = "hana.hadidi.25@ucl.ac.uk"},
+    {name = "Holwerda, Wietske", email = "wietske.holwerda.25@ucl.ac.uk"},
+    {name = "Lin, Grace Y.", email = "grace.lin.25@ucl.ac.uk"},
+    {name = "Mothner, Zach", email = "zach.mothner.25@ucl.ac.uk"},
+]   
 requires-python = ">=3.13,<4.0"
 
 dependencies = [
@@ -28,11 +34,12 @@ dev = [
 ]
 
 [tool.poetry]
+version = "2.1.1"
 packages = [{include = "src/"}]
 
 [tool.poetry.scripts]
-"app:dev" = "src.frontend.main:__main__"
-"api:dev" = "src.api.app:__main__"
+"app:dev" = "poetry run uvicorn src.frontend.main:main"
+"api:dev" = "poetry run uvicorn src.api.main:main"
 
 [tool.ruff]
 line-length = 120
