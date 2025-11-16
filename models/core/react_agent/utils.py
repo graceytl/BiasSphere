@@ -96,7 +96,7 @@ def load_chat_model(model_name: str, context=None) -> BaseChatModel:
             return ChatOpenAI(
                 model=model_name,
                 base_url=f"{base_url}/v1",  # Use OpenAI-compatible endpoint
-                api_key="ollama",  # Dummy key for local Ollama
+                api_key="ollama",  # pragma: allowlist secret
                 temperature=float(temperature),
                 timeout=int(timeout),
             )
