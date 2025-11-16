@@ -6,6 +6,20 @@ class HealthCheckResponse(BaseModel):
     status: str
 
 
+class ContentExtractionRequest(BaseModel):
+    urls: List[str]
+    summary: bool = True
+    extract_effort: str = "high"
+    response_length: str = "Large"
+
+
+class Content(BaseModel):
+    title: str
+    url: str
+    content: str
+    summary: str
+
+
 class AnalyseArticleRequest(BaseModel):
     article: str
 

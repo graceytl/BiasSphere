@@ -46,7 +46,7 @@ async def extract_claims(prompt: str) -> ClaimsAnalysisResponse:
 
 async def research(prompt: str) -> ResearchResponse:
     logger.info("Starting research...\n")
-    result = await research_agent.invoke({"messages": [prompt]})
+    result = research_agent.invoke({"messages": [prompt]})
 
     message = result["structured_response"]
 
