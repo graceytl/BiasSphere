@@ -3,14 +3,22 @@ import logging
 from langchain_valyu import ValyuSearchTool
 from langgraph.prebuilt import create_react_agent
 from src.config import settings
+from valyu import Valyu
 
 from models.core.react_agent.holistic_ai_bedrock import get_chat_model
-from src.models import ClaimsAnalysisResponse, EntityAnalysisResponse, ResearchResponse
+from src.models import (
+    ClaimsAnalysisResponse,
+    Content,
+    ContentExtractionRequest,
+    EntityAnalysisResponse,
+    ResearchResponse,
+)
 
 logger = logging.getLogger(__name__)
 
 # Create search tool with configuration
 search_tool = ValyuSearchTool(valyu_api_key=settings.VALYU_API_KEY)
+valyu_client = Valyu(api_key=settings.VALYU_API_KEY)
 
 llm = get_chat_model("claude-3-5-sonnet")
 research_agent = create_react_agent(
@@ -53,3 +61,22 @@ async def research(prompt: str) -> ResearchResponse:
     logger.info("Research complete\n")
 
     return ResearchResponse.model_validate(message)
+
+
+async def content_extractor(url: str) -> Content:
+    """Extract content from a given URL using Valyu tool."""
+    logger.info(f"Extracting content from URL: {url}")
+    query = ContentExtractionRequest(urls=[url])
+    response = valyu_client.contents(**query)
+
+    results = response.results[0]
+
+    content = Content(
+        title=results.title,
+        url=results.url,
+        content=results.content,
+        summary=results.summary,
+    )
+
+    logger.info("Content extraction complete.")
+    return content

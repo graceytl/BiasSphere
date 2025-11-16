@@ -1,5 +1,5 @@
 from typing import List
-from src.api.tools import get_entities, extract_claims, research
+from src.api.tools import content_extractor, get_entities, extract_claims, research
 from src.models import ClaimsAnalysisResponse, EntityAnalysisResponse, MediaSummary, ResearchResponse
 import logging
 from opentelemetry import trace
@@ -20,8 +20,19 @@ class MediaAgent:
         }
 
     @tracer.start_as_current_span("Scanning Media Articles")
-    async def scan_media(self, content: str) -> MediaSummary:
+    async def scan_media(self, input: str) -> MediaSummary:
         """Scan media articles for bias and factual accuracy on given content."""
+
+        logger.info("Checking input type (URL or text)...")
+        content_obj = None
+        if await is_url(input):
+            logger.info("Content is a URL, extracting content first.")
+            with tracer.start_as_current_span("Extracting Content from URL"):
+                content_obj = await content_extractor(input)
+                content = content_obj.content
+                logging.info("Extracted content title.")
+        else:
+            content = input
 
         logger.info("Scanning media articles for content")
 
@@ -45,11 +56,17 @@ class MediaAgent:
 
         logging.info("Completed media analysis.")
         display: MediaSummary = MediaSummary(
+            title=content_obj.title if content_obj else "User Input",
             content=content,
-            summary="Placeholder",
+            summary=content_obj.summary if content_obj else "Summary not available for direct text input.",
             entities=entityList.entities,
             claims=claimsList.claims,
             related_findings=relatedFindings,
         )
 
         return display
+
+
+async def is_url(input_str: str) -> bool:
+    """Check if the input string is a URL."""
+    return input_str.startswith("http://") or input_str.startswith("https://")

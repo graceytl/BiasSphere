@@ -43,7 +43,7 @@ async def valyu_search(claim: Claim) -> ResearchResponse:
 
 
 @router.post("/analyse")
-async def analyse_article(article: str) -> MediaSummary:
+async def analyse_input(input: str) -> MediaSummary:
     agent = MediaAgent()
-    response = await agent.scan_media(article)
+    response = await agent.scan_media(input)
     return response
