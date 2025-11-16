@@ -12,7 +12,7 @@ from langchain_core.messages import BaseMessage, AIMessage, HumanMessage, System
 from langchain_core.callbacks import CallbackManagerForLLMRun
 from langchain_core.outputs import ChatGeneration, ChatResult
 from pydantic import Field, SecretStr, BaseModel as PydanticBaseModel
-
+from src.config import settings
 
 class HolisticAIBedrockChat(BaseChatModel):
     """Chat model for Holistic AI Bedrock Proxy API (for tutorials)."""
@@ -443,8 +443,8 @@ def get_chat_model(model_name: str = "claude-3-5-sonnet", use_openai: bool = Fal
     }
 
     # Check for Holistic AI Bedrock credentials
-    team_id = os.getenv("HOLISTIC_AI_TEAM_ID")
-    api_token = os.getenv("HOLISTIC_AI_API_TOKEN")
+    team_id = settings.HOLISTIC_AI_TEAM_ID
+    api_token = settings.HOLISTIC_AI_API_TOKEN
 
     # If explicitly requesting OpenAI, use it
     if use_openai:

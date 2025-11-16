@@ -20,6 +20,10 @@ dependencies = [
     "tool>=0.8.0",
     "uvicorn>=0.38.0",
     "dynaconf (>=3.2.12,<4.0.0)",
+    "opentelemetry-sdk (>=1.38.0,<2.0.0)",
+    "langchain-valyu (==0.3.4)",
+    "langgraph (==1.0.1)",
+    "langchain-openai (==0.3.35)",
 ]
 
 [dependency-groups]

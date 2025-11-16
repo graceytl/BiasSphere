@@ -1,0 +1,11 @@
+from src.constants import ENTITY_EXTRACTION_PROMPT, CLAIM_EXTRACTION_PROMPT, RESEARCH_PROMPT
+
+prompts: dict[str, str] = {
+    "ENTITY_EXTRACTION_PROMPT": ENTITY_EXTRACTION_PROMPT,
+    "CLAIM_EXTRACTION_PROMPT": CLAIM_EXTRACTION_PROMPT,
+    "RESEARCH_PROMPT": RESEARCH_PROMPT,
+}
+
+
+def get_prompt(name: str) -> str:
+    return prompts[name]
