@@ -10,3 +10,7 @@ wheels/
 .venv
 
 .nicegui/
+
+# Dynaconf secrets
+.secrets.toml
+.env

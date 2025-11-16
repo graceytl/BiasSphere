@@ -1,0 +1,33 @@
+[default]
+app_name = "BiasSphere"
+version = "0.1.0"
+debug = true
+
+[default.server]
+host = "127.0.0.1"
+port = 8000
+reload = true
+
+[default.api]
+title = "BiasSphere API"
+description = "API for bias detection and analysis of news articles"
+
+[default.aws]
+# AWS Bedrock managed by Holistic AI (credentials provided during hackathon)
+hai_team_id = "team_the_great_hack_2025_033"
+# hai_api_token = "Please define in secrets.toml"
+
+[production]
+debug = false
+
+[production.server]
+host = "0.0.0.0"
+port = 80
+reload = false
+
+[testing]
+debug = true
+
+[testing.server]
+host = "127.0.0.1"
+port = 8001
