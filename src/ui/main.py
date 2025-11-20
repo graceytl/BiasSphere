@@ -1,5 +1,5 @@
 from nicegui import app as nicegui_app, ui
-from src.api.main import analyse_article, router
+from src.api.main import analyse_input, router
 from src.config import settings
 import logging
 
@@ -39,7 +39,7 @@ def homepage():
 
         try:
             # Call the async analysis function
-            response = await analyse_article(article_input.value or "")
+            response = await analyse_input(article_input.value or "")
             # ui.notify(response)
 
             # Clear loading and show results
@@ -51,7 +51,7 @@ def homepage():
                     with ui.column().classes("w-full gap-6"):
                         # BIAS DASHBOARD
                         with ui.card().classes("bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm"):
-                            ui.label("Bias Dashboard").classes("text-md font-semibold mb-4")
+                            ui.label("Bias Dashboard").classes("text-md font-semibold mb-4 text-white")
 
                             # Header row
                             with ui.row().classes(
@@ -64,22 +64,82 @@ def homepage():
 
                             # Data rows
                             for entity in response.entities:
+                                evidence_display = ""
+                                for i, evidence in enumerate(entity.evidence_sentences):
+                                    evidence_display += str(i + 1) + ". " + evidence + "\n"
+
+                                loaded_phrases_display = ""
+                                for i, loaded_phrase in enumerate(entity.loaded_phrases):
+                                    loaded_phrases_display += str(i + 1) + ". " + loaded_phrase + "\n"
                                 with ui.row().classes(
                                     "w-full text-[13px] text-slate-200 py-2 border-b border-slate-800/50 last:border-b-0"
                                 ):
                                     ui.label(entity.name).classes("flex-1 font-medium")
                                     ui.label(entity.tone).classes("flex-1")
-                                    ui.label(entity.evidence_sentences).classes("flex-1")
-                                    ui.label(entity.loaded_phrases).classes("flex-1")
+                                    ui.label(evidence_display).classes("flex-1")
+                                    ui.label(loaded_phrases_display).classes("flex-1")
 
                         # CLAIMS & CHECKS
                         with ui.card().classes("bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm"):
-                            ui.label("Claims & Checks").classes("text-md font-semibold mb-4")
+                            ui.label("Claims & Checks").classes("text-md font-semibold mb-4 text-white")
 
                             for claim in response.claims:
                                 with ui.column().classes("w-full mb-3 last:mb-0"):
                                     ui.label(claim.claim).classes("text-[13px] text-slate-200 font-medium")
-                                    ui.label(claim.type).classes("text-[11px] text-slate-400 mt-1")
+                                    ui.label(claim.type + ": " + claim.reasoning).classes(
+                                        "text-[11px] text-slate-400 mt-1"
+                                    )
+
+                        # FURTHER RESEARCH ON OPINION CLAIMS
+                        with ui.card().classes("bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-sm"):
+                            ui.label("Researching Opinion Claims").classes("text-md font-semibold mb-4 text-white")
+
+                            # Header row
+                            with ui.row().classes(
+                                "w-full text-[12px] text-slate-400 border-b border-slate-700 pb-2 mb-2"
+                            ):
+                                ui.label("Claim").classes("flex-1 font-medium")
+                                ui.label("Statement").classes("flex-1 font-medium")
+                                ui.label("Opinion/Fact").classes("flex-1 font-medium")
+                                ui.label("Supporting/Refuting Claim").classes("flex-1 font-medium")
+                                ui.label("Source").classes("flex-1 font-medium")
+
+                            i = 0
+                            for claim in response.claims:
+                                if claim.type == "opinion":
+                                    related_findings = response.related_findings[i]
+                                    i += 1
+                                    for finding in related_findings.opinion_statements:
+                                        supporting = "Refuting"
+                                        if finding.supporting:
+                                            supporting = "Supporting"
+                                        with ui.row().classes("w-full mb-3 last:mb-0"):
+                                            ui.label(claim.claim).classes(
+                                                "flex-1 text-[13px] text-slate-200 font-medium"
+                                            )
+                                            ui.label(finding.statement).classes(
+                                                "flex-1 text-[11px] text-slate-400 mt-1"
+                                            )
+                                            ui.label("Opinion").classes("flex-1 text-[11px] text-slate-400 mt-1")
+                                            ui.label(supporting).classes("flex-1 text-[11px] text-slate-400 mt-1")
+                                            ui.label(finding.source).classes("flex-1 text-[11px] text-slate-400 mt-1")
+                                    for finding in related_findings.factual_context:
+                                        supporting = "Refuting"
+                                        if finding.supporting:
+                                            supporting = "Supporting"
+                                        with ui.row().classes("w-full mb-3 last:mb-0"):
+                                            ui.label(claim.claim).classes(
+                                                "flex-1 text-[13px] text-slate-200 font-medium"
+                                            )
+                                            ui.label(finding.statement).classes(
+                                                "flex-1 text-[11px] text-slate-400 mt-1"
+                                            )
+                                            ui.label("Factual Context").classes(
+                                                "flex-1 text-[11px] text-slate-400 mt-1"
+                                            )
+                                            ui.label(supporting).classes("flex-1 text-[11px] text-slate-400 mt-1")
+                                            ui.label(finding.source).classes("flex-1 text-[11px] text-slate-400 mt-1")
+
         except Exception as e:
             result_container.clear()
             with result_container:
