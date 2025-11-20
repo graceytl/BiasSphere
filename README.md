@@ -22,13 +22,13 @@ cd BiasSphere
 ```bash
 poetry run sync 
 ```
-### Start backend API server
+### Start backend API server only
 ```bash
-poetry run uvicorn api.app:app --reload
+poetry run api:dev
 ```
-### Start frontend
-```bashbash
-uv run python3 src/frontend/main.py
+### Start app
+```bash
+poetry run app:dev
 ```
 
 ## Features
