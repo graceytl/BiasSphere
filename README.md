@@ -12,11 +12,12 @@ cd BiasSphere
 ## Pre-requisites
 - **uv**: This repository uses `uv` for package management
     - Run `uv sync --group=all` to install all dependencies
-- **poetry**: Poetry is used for dependency management and packaging
+- **poetry**: Poetry is used for overall project dependency management and packaging 
     - Install Poetry by following the instructions at https://python-poetry.org/docs/#installation
     - Use `poetry sync` to install project dependencies
 - **pre-commit**: Pre-commit runs code linting, type checking, and dependency management, to ensure code quality and clean code
     - Install pre-commit hooks using `uv add tool pre-commit` and `pre-commit install`
+    - Or, `poetry run pre-commit install`
 
 ## Usage
 ```bash
