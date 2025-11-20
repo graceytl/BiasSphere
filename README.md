@@ -32,7 +32,7 @@ uv run python3 src/frontend/main.py
 ```
 
 ## Features
-- Visualisation of bi
+- Visualisation of bias in input text
 
 ## Contributing
 Contributions are welcome! Please feel free to submit a Pull Request.
